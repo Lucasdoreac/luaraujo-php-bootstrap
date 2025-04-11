@@ -1,87 +1,68 @@
-/**
- * Módulo de Validação de Formulários
- * Implementa validações client-side para formulários financeiros
- */
-const Validacao = {
-    /**
-     * Regras de validação para diferentes campos
-     */
-    regras: {
-        valorInicial: {
-            min: 0,
-            mensagem: 'O valor inicial não pode ser negativo'
-        },
-        aporteMensal: {
-            min: 0,
-            mensagem: 'O aporte mensal não pode ser negativo'
-        },
-        prazo: {
-            min: 1,
-            mensagem: 'O prazo deve ser de pelo menos 1 mês'
-        },
-        rentabilidade: {
-            min: 0,
-            max: 100,
-            mensagem: 'A rentabilidade deve estar entre 0% e 100%'
-        },
-        rendaTributavel: {
-            min: 0,
-            mensagem: 'A renda tributável não pode ser negativa'
-        },
-        contribuicaoAnual: {
-            min: 0,
-            mensagem: 'A contribuição anual não pode ser negativa' 
-        }
-    },
+class ValidacaoInvestimentos {
+    constructor() {
+        this.regras = {
+            valorInicial: {
+                min: 0,
+                mensagem: 'O valor inicial não pode ser negativo'
+            },
+            aporteMensal: {
+                min: 0,
+                mensagem: 'O aporte mensal não pode ser negativo'
+            },
+            prazo: {
+                min: 1,
+                mensagem: 'O prazo deve ser de pelo menos 1 mês'
+            },
+            rentabilidade: {
+                min: 0,
+                max: 100,
+                mensagem: 'A rentabilidade deve estar entre 0% e 100%'
+            },
+            taxaFixa: {
+                min: 0,
+                max: 100,
+                mensagem: 'A taxa fixa deve estar entre 0% e 100%'
+            },
+            taxaCDI: {
+                min: 0,
+                max: 100,
+                mensagem: 'A taxa CDI deve estar entre 0% e 100%'
+            },
+            inflacao: {
+                min: 0,
+                max: 100,
+                mensagem: 'A inflação deve estar entre 0% e 100%'
+            }
+        };
 
-    /**
-     * Avisos para diferentes cenários
-     */
-    avisos: {
-        valorInicial: {
-            alto: {
-                limite: 100000,
-                mensagem: 'Com este valor, considere diversificar seus investimentos'
+        this.avisos = {
+            valorInicial: {
+                alto: {
+                    limite: 100000,
+                    mensagem: 'Com este valor, considere diversificar seus investimentos'
+                },
+                baixo: {
+                    limite: 1000,
+                    mensagem: 'Mesmo com pouco, o importante é começar e manter a regularidade'
+                }
             },
-            baixo: {
-                limite: 1000,
-                mensagem: 'Mesmo com pouco, o importante é começar e manter a regularidade'
+            prazo: {
+                curto: {
+                    limite: 12,
+                    mensagem: 'Investimentos de curto prazo têm maior tributação'
+                },
+                medio: {
+                    limite: 24,
+                    mensagem: 'Prazo intermediário: considere a tabela regressiva de IR'
+                },
+                longo: {
+                    limite: 36,
+                    mensagem: 'Ótimo! Prazos longos têm menor tributação'
+                }
             }
-        },
-        prazo: {
-            curto: {
-                limite: 12,
-                mensagem: 'Investimentos de curto prazo têm maior tributação'
-            },
-            medio: {
-                limite: 24,
-                mensagem: 'Prazo intermediário: considere a tabela regressiva de IR'
-            },
-            longo: {
-                limite: 36,
-                mensagem: 'Ótimo! Prazos longos têm menor tributação'
-            }
-        },
-        aporteMensal: {
-            excessivo: {
-                porcentagemRenda: 30,
-                mensagem: 'O aporte representa mais de 30% da sua renda mensal'
-            }
-        },
-        pgbl: {
-            excedeDeducao: {
-                porcentagem: 12,
-                mensagem: 'O valor excede o limite de 12% de dedução da renda tributável'
-            }
-        }
-    },
+        };
+    }
 
-    /**
-     * Valida um campo individual
-     * @param {string} campo - Nome do campo
-     * @param {number} valor - Valor a ser validado
-     * @return {Object} - Resultado da validação
-     */
     validarCampo(campo, valor) {
         const regra = this.regras[campo];
         if (!regra) return { valido: true };
@@ -108,13 +89,8 @@ const Validacao = {
         }
 
         return { valido: true };
-    },
+    }
 
-    /**
-     * Gera avisos com base nos dados fornecidos
-     * @param {Object} dados - Dados do formulário
-     * @return {Array} - Lista de avisos
-     */
     gerarAvisos(dados) {
         const avisos = [];
 
@@ -151,187 +127,125 @@ const Validacao = {
         // Validar aporte em relação à renda
         if (dados.rendaMensal) {
             const percentualRenda = (dados.aporteMensal / dados.rendaMensal) * 100;
-            if (percentualRenda > this.avisos.aporteMensal.excessivo.porcentagemRenda) {
+            if (percentualRenda > 30) {
                 avisos.push({
                     tipo: 'warning',
                     campo: 'aporteMensal',
-                    mensagem: this.avisos.aporteMensal.excessivo.mensagem
-                });
-            }
-        }
-
-        // Validação PGBL
-        if (dados.rendaTributavel && dados.contribuicaoAnual) {
-            const limiteDeducao = dados.rendaTributavel * (this.avisos.pgbl.excedeDeducao.porcentagem / 100);
-            if (dados.contribuicaoAnual > limiteDeducao) {
-                avisos.push({
-                    tipo: 'warning',
-                    campo: 'contribuicaoAnual',
-                    mensagem: `O valor excede o limite de dedução de R$ ${limiteDeducao.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`
+                    mensagem: 'O aporte representa mais de 30% da sua renda mensal'
                 });
             }
         }
 
         return avisos;
-    },
+    }
 
-    /**
-     * Validar formulário completo
-     * @param {Object} dados - Dados do formulário
-     * @return {Object} - Resultado da validação
-     */
     validarFormulario(dados) {
         const erros = [];
         const avisos = this.gerarAvisos(dados);
 
         // Validar cada campo
-        Object.entries(dados).forEach(([campo, valor]) => {
-            const resultado = this.validarCampo(campo, valor);
+        Object.keys(dados).forEach(campo => {
+            if (this.regras[campo]) {
+                const resultado = this.validarCampo(campo, dados[campo]);
+                if (!resultado.valido) {
+                    erros.push({
+                        campo,
+                        mensagem: resultado.mensagem
+                    });
+                }
+            }
+        });
+
+        // Validações específicas de acordo com o tipo de calculadora
+        if (dados.tipoRendimento === 'fixa' && this.regras.taxaFixa) {
+            const resultado = this.validarCampo('taxaFixa', dados.taxaFixa);
             if (!resultado.valido) {
                 erros.push({
-                    campo,
+                    campo: 'taxaFixa',
                     mensagem: resultado.mensagem
                 });
             }
-        });
+        } else if (dados.tipoRendimento === 'cdi' && this.regras.taxaCDI) {
+            const resultado = this.validarCampo('taxaCDI', dados.taxaCDI);
+            if (!resultado.valido) {
+                erros.push({
+                    campo: 'taxaCDI',
+                    mensagem: resultado.mensagem
+                });
+            }
+        }
 
         return {
             valido: erros.length === 0,
             erros,
             avisos
         };
-    },
+    }
 
-    /**
-     * Limpa mensagens de erro em todos os campos
-     * @param {HTMLFormElement} form - Formulário a ser limpo
-     */
-    limparErros(form) {
-        form.querySelectorAll('.is-invalid').forEach(campo => {
-            campo.classList.remove('is-invalid');
-        });
-        
-        form.querySelectorAll('.invalid-feedback').forEach(feedback => {
-            feedback.remove();
-        });
-    },
+    renderizarFeedback(resultado) {
+        let html = '';
 
-    /**
-     * Exibe mensagens de erro nos campos
-     * @param {HTMLFormElement} form - Formulário 
-     * @param {Array} erros - Lista de erros
-     */
-    exibirErros(form, erros) {
-        erros.forEach(erro => {
-            const campo = form.querySelector(`#${erro.campo}`);
-            if (campo) {
-                campo.classList.add('is-invalid');
-                
-                const feedback = document.createElement('div');
-                feedback.className = 'invalid-feedback';
-                feedback.textContent = erro.mensagem;
-                
-                campo.parentElement.appendChild(feedback);
-            }
-        });
-    },
+        // Renderizar erros
+        if (resultado.erros.length > 0) {
+            html += '<div class="feedback-erros">';
+            resultado.erros.forEach(erro => {
+                html += `
+                    <div class="alert alert-danger">
+                        <strong>${erro.campo}:</strong> ${erro.mensagem}
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
 
-    /**
-     * Mostra os avisos em um contêiner
-     * @param {HTMLElement} container - Contêiner para os avisos
-     * @param {Array} avisos - Lista de avisos
-     */
-    exibirAvisos(container, avisos) {
-        container.innerHTML = '';
-        
-        avisos.forEach(aviso => {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${aviso.tipo} alert-dismissible fade show`;
-            
-            alertDiv.innerHTML = `
-                <strong>${aviso.campo}:</strong> ${aviso.mensagem}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            
-            container.appendChild(alertDiv);
-        });
-    },
+        // Renderizar avisos
+        if (resultado.avisos.length > 0) {
+            html += '<div class="feedback-avisos">';
+            resultado.avisos.forEach(aviso => {
+                html += `
+                    <div class="alert alert-${aviso.tipo}">
+                        <strong>${aviso.campo}:</strong> ${aviso.mensagem}
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
 
-    /**
-     * Aplicar validação em tempo real para um campo
-     * @param {HTMLInputElement} input - Campo de entrada
-     */
+        return html;
+    }
+
     aplicarValidacaoEmCampo(input) {
-        const campo = input.id;
-        
-        input.addEventListener('input', () => {
-            // Limpar estados anteriores
-            input.classList.remove('is-invalid', 'is-valid');
-            const feedbackAntigo = input.parentElement.querySelector('.invalid-feedback');
-            if (feedbackAntigo) {
-                feedbackAntigo.remove();
-            }
-            
-            // Validar novo valor
-            const valor = parseFloat(input.value);
-            if (!isNaN(valor)) {
-                const resultado = this.validarCampo(campo, valor);
-                
-                if (!resultado.valido) {
-                    input.classList.add('is-invalid');
-                    
-                    const feedback = document.createElement('div');
-                    feedback.className = 'invalid-feedback';
-                    feedback.textContent = resultado.mensagem;
-                    
-                    input.parentElement.appendChild(feedback);
-                } else {
-                    input.classList.add('is-valid');
-                }
-            }
-        });
-    },
+        input.addEventListener('input', (e) => {
+            const campo = e.target.id;
+            const valor = parseFloat(e.target.value);
+            const resultado = this.validarCampo(campo, valor);
 
-    /**
-     * Configurar validação para todos os campos numéricos de um formulário
-     * @param {HTMLFormElement} form - Formulário a ser configurado
-     */
-    configurarValidacaoFormulario(form) {
-        form.querySelectorAll('input[type="number"]').forEach(input => {
-            this.aplicarValidacaoEmCampo(input);
-        });
-        
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const dados = {};
-            const formData = new FormData(form);
-            
-            for (let [campo, valor] of formData.entries()) {
-                dados[campo] = valor.includes('.') ? parseFloat(valor) : parseInt(valor, 10);
-            }
-            
-            const validacao = this.validarFormulario(dados);
-            
-            this.limparErros(form);
-            
-            if (!validacao.valido) {
-                this.exibirErros(form, validacao.erros);
-                return false;
-            }
-            
-            const avisosContainer = document.querySelector('#avisos-container');
-            if (avisosContainer && validacao.avisos.length > 0) {
-                this.exibirAvisos(avisosContainer, validacao.avisos);
-            }
-            
-            // Se chegou aqui, o formulário é válido
-            return true;
+            this.atualizarFeedbackVisual(input, resultado);
         });
     }
-};
 
-// Export para uso em outros módulos
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = Validacao;
+    atualizarFeedbackVisual(input, resultado) {
+        // Remover classes anteriores
+        input.classList.remove('is-invalid', 'is-valid');
+        
+        // Remover mensagem de erro anterior
+        const feedbackAntigo = input.parentElement.querySelector('.feedback-message');
+        if (feedbackAntigo) {
+            feedbackAntigo.remove();
+        }
+
+        // Adicionar nova classe e mensagem
+        if (!resultado.valido) {
+            input.classList.add('is-invalid');
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback-message invalid-feedback';
+            feedback.textContent = resultado.mensagem;
+            input.parentElement.appendChild(feedback);
+        } else {
+            input.classList.add('is-valid');
+        }
+    }
 }
+
+// Exportar para uso global
+window.ValidacaoInvestimentos = ValidacaoInvestimentos;
