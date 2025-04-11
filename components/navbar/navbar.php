@@ -25,7 +25,7 @@
                 </li>
                 <!-- WhatsApp CTA Button -->
                 <li class="nav-item">
-                    <a class="btn btn-success btn-lg" href="https://wa.me/5561983426774?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta." target="_blank">
+                    <a class="btn btn-success btn-sm" href="https://wa.me/5561983426774?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta." target="_blank">
                         <i class="fab fa-whatsapp"></i> Agende sua consulta
                     </a>
                 </li>
