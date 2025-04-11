@@ -1,12 +1,12 @@
 /**
  * Módulo de Calculadora Financeira
- * Implementa funções básicas para cálculos financeiros utilizados nas simulações
+ * Contém funções básicas para cálculos financeiros reutilizáveis
  */
 const Calculadora = {
     /**
-     * Formata um valor para moeda brasileira (R$)
+     * Formata um valor numérico para moeda brasileira
      * @param {number} valor - Valor a ser formatado
-     * @return {string} Valor formatado como moeda
+     * @return {string} - Valor formatado como moeda (ex: R$ 1.000,00)
      */
     formatarMoeda(valor) {
         return new Intl.NumberFormat('pt-BR', {
@@ -16,9 +16,9 @@ const Calculadora = {
     },
 
     /**
-     * Formata um valor para porcentagem
-     * @param {number} valor - Valor a ser formatado (0.1 para 10%)
-     * @return {string} Valor formatado como porcentagem
+     * Formata um valor como percentual
+     * @param {number} valor - Valor a ser formatado (ex: 0.05 para 5%)
+     * @return {string} - Valor formatado como percentual (ex: 5,00%)
      */
     formatarPorcentagem(valor) {
         return new Intl.NumberFormat('pt-BR', {
@@ -29,12 +29,12 @@ const Calculadora = {
     },
 
     /**
-     * Calcula o montante final usando juros compostos
-     * @param {number} principal - Capital inicial
+     * Calcula montante com juros compostos
+     * @param {number} principal - Valor inicial
      * @param {number} aporteMensal - Valor de aporte mensal
-     * @param {number} taxa - Taxa de juros mensal (decimal)
+     * @param {number} taxa - Taxa mensal (ex: 0.01 para 1%)
      * @param {number} prazo - Prazo em meses
-     * @return {number} Montante final após o período
+     * @return {number} - Montante final
      */
     calcularJurosCompostos(principal, aporteMensal, taxa, prazo) {
         let montante = principal;
@@ -45,32 +45,32 @@ const Calculadora = {
     },
 
     /**
-     * Calcula a rentabilidade real descontando a inflação
-     * @param {number} rentabilidadeNominal - Rentabilidade nominal (decimal)
-     * @param {number} inflacao - Taxa de inflação (decimal)
-     * @return {number} Rentabilidade real
+     * Calcula rentabilidade real descontando a inflação
+     * @param {number} rentabilidadeNominal - Rentabilidade nominal (ex: 0.10 para 10%)
+     * @param {number} inflacao - Taxa de inflação (ex: 0.05 para 5%)
+     * @return {number} - Rentabilidade real
      */
     calcularRentabilidadeReal(rentabilidadeNominal, inflacao) {
         return ((1 + rentabilidadeNominal) / (1 + inflacao) - 1);
     },
 
     /**
-     * Calcula a alíquota de IR com base no prazo
-     * @param {number} prazoMeses - Prazo em meses
-     * @return {number} Alíquota do IR (decimal)
+     * Determina a alíquota de Imposto de Renda aplicável
+     * @param {number} prazoMeses - Prazo do investimento em meses
+     * @return {number} - Alíquota aplicável (ex: 0.15 para 15%)
      */
     calcularAliquotaIR(prazoMeses) {
-        if (prazoMeses <= 6) return 0.225;
-        if (prazoMeses <= 12) return 0.20;
-        if (prazoMeses <= 24) return 0.175;
+        if (prazoMeses <= 180) return 0.225;
+        if (prazoMeses <= 360) return 0.20;
+        if (prazoMeses <= 720) return 0.175;
         return 0.15;
     },
 
     /**
-     * Calcula o imposto de renda sobre o rendimento
+     * Calcula o valor do imposto de renda sobre rendimentos
      * @param {number} rendimento - Valor do rendimento
-     * @param {number} prazoMeses - Prazo em meses
-     * @return {number} Valor do imposto de renda
+     * @param {number} prazoMeses - Prazo do investimento em meses
+     * @return {number} - Valor do IR
      */
     calcularImpostoRenda(rendimento, prazoMeses) {
         const aliquota = this.calcularAliquotaIR(prazoMeses);
@@ -78,10 +78,10 @@ const Calculadora = {
     },
 
     /**
-     * Calcula o benefício fiscal do PGBL
+     * Calcula o benefício fiscal do PGBL considerando o limite de 12% da renda
      * @param {number} rendaTributavel - Renda tributável anual
-     * @param {number} aportePGBL - Valor anual aportado no PGBL
-     * @return {number} Benefício fiscal (economia no IR)
+     * @param {number} aportePGBL - Valor aportado em PGBL
+     * @return {number} - Valor do benefício fiscal
      */
     calcularBeneficioFiscalPGBL(rendaTributavel, aportePGBL) {
         const limiteDeducao = rendaTributavel * 0.12;
@@ -90,11 +90,11 @@ const Calculadora = {
     },
 
     /**
-     * Calcula o rendimento acumulado ao longo de um período
-     * @param {Array<number>} aportes - Array com os valores de aporte para cada período
-     * @param {Array<number>} taxas - Array com as taxas para cada período
-     * @param {number} prazo - Número de períodos
-     * @return {Object} Objeto com saldo final e rendimento total
+     * Calcula o rendimento acumulado ao longo do tempo
+     * @param {Array<number>} aportes - Array com os valores de aporte
+     * @param {Array<number>} taxas - Array com as taxas aplicáveis
+     * @param {number} prazo - Prazo total
+     * @return {Object} - Objeto com saldo final e rendimento total
      */
     calcularRendimentoAcumulado(aportes, taxas, prazo) {
         let saldo = 0;
@@ -114,19 +114,77 @@ const Calculadora = {
 
     /**
      * Calcula o aporte mensal necessário para atingir uma meta
-     * @param {number} valorMeta - Valor alvo a ser alcançado
+     * @param {number} valorMeta - Valor da meta
      * @param {number} prazo - Prazo em meses
-     * @param {number} taxaMensal - Taxa mensal de rendimento (decimal)
-     * @return {number} Valor do aporte mensal necessário
+     * @param {number} taxaMensal - Taxa mensal (ex: 0.01 para 1%)
+     * @return {number} - Valor do aporte mensal necessário
      */
     calcularMetaMensal(valorMeta, prazo, taxaMensal) {
         // PMT = VF / ((1 + i)^n - 1) / i
         const taxaDecimal = taxaMensal / 100;
         const denominador = (Math.pow(1 + taxaDecimal, prazo) - 1) / taxaDecimal;
         return valorMeta / denominador;
+    },
+
+    /**
+     * Calcula a Taxa Interna de Retorno (TIR)
+     * @param {Array<number>} fluxoCaixa - Array com o fluxo de caixa
+     * @param {number} estimativaInicial - Estimativa inicial para a TIR
+     * @return {number} - Taxa interna de retorno
+     */
+    calcularTIR(fluxoCaixa, estimativaInicial = 0.1) {
+        const ITERACOES_MAX = 100;
+        const PRECISAO = 0.0000001;
+        
+        let taxaAtual = estimativaInicial;
+        
+        for (let i = 0; i < ITERACOES_MAX; i++) {
+            const vpla = this.calcularVPLA(fluxoCaixa, taxaAtual);
+            
+            if (Math.abs(vpla) < PRECISAO) {
+                return taxaAtual;
+            }
+            
+            const derivada = this.calcularDerivadaVPLA(fluxoCaixa, taxaAtual);
+            const novaTaxa = taxaAtual - vpla / derivada;
+            
+            if (Math.abs(novaTaxa - taxaAtual) < PRECISAO) {
+                return novaTaxa;
+            }
+            
+            taxaAtual = novaTaxa;
+        }
+        
+        return null; // Não convergiu
+    },
+
+    /**
+     * Calcula o Valor Presente Líquido Anualizado
+     * @param {Array<number>} fluxoCaixa - Array com o fluxo de caixa
+     * @param {number} taxa - Taxa de desconto
+     * @return {number} - VPLA
+     */
+    calcularVPLA(fluxoCaixa, taxa) {
+        return fluxoCaixa.reduce((vpla, fluxo, periodo) => {
+            return vpla + fluxo / Math.pow(1 + taxa, periodo);
+        }, 0);
+    },
+
+    /**
+     * Calcula a derivada do VPLA em relação à taxa
+     * @param {Array<number>} fluxoCaixa - Array com o fluxo de caixa
+     * @param {number} taxa - Taxa de desconto
+     * @return {number} - Derivada do VPLA
+     */
+    calcularDerivadaVPLA(fluxoCaixa, taxa) {
+        return fluxoCaixa.reduce((derivada, fluxo, periodo) => {
+            if (periodo === 0) return derivada;
+            return derivada - periodo * fluxo / Math.pow(1 + taxa, periodo + 1);
+        }, 0);
     }
 };
 
-// Exportando o objeto Calculadora para uso em outros arquivos
-// Em um ambiente de PHP puro, podemos usar este objeto diretamente
-// através da tag <script> que inclui este arquivo
+// Export para uso em outros módulos
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = Calculadora;
+}
