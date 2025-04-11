@@ -1,0 +1,229 @@
+/* Continuação dos estilos principais */
+
+/* Animações */
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* Tooltips Educacionais */
+.educational-tip {
+    position: relative;
+    display: inline-block;
+}
+
+.tip-content {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px;
+    background: var(--dark-bg);
+    border-radius: 5px;
+    box-shadow: 0 2px 8px var(--shadow-color);
+    width: 250px;
+    display: none;
+    z-index: 1000;
+}
+
+.educational-tip:hover .tip-content {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Loader */
+.calculation-loader {
+    display: none;
+    text-align: center;
+    padding: 20px;
+}
+
+.calculation-loader.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.loader-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Resultados */
+.results-container {
+    margin-top: 30px;
+    animation: slideIn 0.3s ease;
+}
+
+.result-card {
+    background: var(--dark-bg);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.result-value {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.result-value.positive {
+    color: var(--secondary-color);
+}
+
+.result-value.negative {
+    color: var(--danger-color);
+}
+
+/* Histórico */
+.history-table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.history-table th {
+    background: var(--dark-bg);
+    color: var(--light-text);
+    padding: 12px;
+    text-align: left;
+}
+
+.history-table td {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Responsividade para diferentes dispositivos */
+/* Desktop Large */
+@media (min-width: 1400px) {
+    .container {
+        max-width: 1320px;
+    }
+    
+    .result-card {
+        padding: 30px;
+    }
+    
+    .chart-container {
+        height: 500px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    .container {
+        max-width: 1140px;
+    }
+    
+    .chart-container {
+        height: 400px;
+    }
+}
+
+/* Tablet Landscape */
+@media (min-width: 992px) and (max-width: 1199px) {
+    .container {
+        max-width: 960px;
+    }
+    
+    .chart-container {
+        height: 350px;
+    }
+}
+
+/* Tablet Portrait */
+@media (min-width: 768px) and (max-width: 991px) {
+    .container {
+        max-width: 720px;
+    }
+    
+    .result-card {
+        padding: 15px;
+    }
+    
+    .chart-container {
+        height: 300px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    .result-value {
+        font-size: 20px;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+    
+    .table-responsive {
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: white;
+        color: black;
+    }
+    
+    .container {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .chart-container {
+        page-break-inside: avoid;
+        border: 1px solid #ddd;
+    }
+    
+    .result-card {
+        page-break-inside: avoid;
+    }
+}
