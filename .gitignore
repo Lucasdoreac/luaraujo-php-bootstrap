@@ -1,0 +1,30 @@
+# Arquivos de configuração do sistema
+.DS_Store
+Thumbs.db
+
+# Dependências e diretórios de build
+node_modules/
+vendor/
+
+# Arquivos de ambiente
+.env
+.env.local
+
+# Arquivos de log
+*.log
+logs/
+
+# Arquivos temporários
+tmp/
+temp/
+
+# Arquivos de IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Outros arquivos a ignorar
+phpinfo.php
+*.bak
+*.tmp
