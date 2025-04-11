@@ -1,0 +1,161 @@
+/* Estilos base */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 12pt;
+    line-height: 1.4;
+    color: #333;
+}
+
+/* Cabeçalho do relatório */
+.relatorio header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 20px;
+}
+
+.relatorio header h1 {
+    color: #2c3e50;
+    font-size: 24pt;
+    margin: 0 0 10px 0;
+}
+
+.relatorio .data {
+    color: #7f8c8d;
+    font-size: 10pt;
+    font-style: italic;
+}
+
+/* Seções */
+.relatorio section {
+    margin-bottom: 30px;
+}
+
+.relatorio h2 {
+    color: #2c3e50;
+    font-size: 16pt;
+    margin: 20px 0 15px 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #bdc3c7;
+}
+
+.relatorio h3 {
+    color: #34495e;
+    font-size: 14pt;
+    margin: 15px 0 10px 0;
+}
+
+/* Tabelas */
+.resumo-table,
+.detailed-table,
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+.resumo-table th,
+.detailed-table th,
+.comparison-table th {
+    background-color: #3498db;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 8px;
+    text-align: left;
+}
+
+.resumo-table td,
+.detailed-table td,
+.comparison-table td {
+    padding: 8px;
+    border: 1px solid #bdc3c7;
+}
+
+.resumo-table tr:nth-child(even),
+.detailed-table tr:nth-child(even),
+.comparison-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Análise e Recomendações */
+.analise-section {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.analise-section ul {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+
+.analise-section li {
+    margin-bottom: 5px;
+}
+
+.recommendations {
+    margin-top: 15px;
+}
+
+.recommendation-item {
+    padding: 8px;
+    margin: 5px 0;
+    border-left: 3px solid #3498db;
+    background-color: #fff;
+}
+
+/* Rodapé */
+.relatorio footer {
+    margin-top: 30px;
+    padding-top: 15px;
+    border-top: 1px solid #bdc3c7;
+    text-align: center;
+    font-size: 10pt;
+    color: #7f8c8d;
+}
+
+/* Gráficos e Visualizações */
+.chart-container {
+    width: 100%;
+    margin: 20px 0;
+    page-break-inside: avoid;
+}
+
+/* Estilos específicos para valores */
+.valor-positivo {
+    color: #27ae60;
+}
+
+.valor-negativo {
+    color: #c0392b;
+}
+
+.destaque {
+    font-weight: bold;
+    background-color: #fff3cd;
+    padding: 2px 5px;
+}
+
+/* Quebras de página */
+.nova-pagina {
+    page-break-before: always;
+}
+
+/* Responsividade para diferentes tamanhos de papel */
+@page {
+    margin: 2cm;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+    
+    .quebra-pagina {
+        page-break-before: always;
+    }
+    
+    .manter-junto {
+        page-break-inside: avoid;
+    }
+}
