@@ -30,7 +30,7 @@
         <hr>
         <div class="row">
             <div class="col-md-12 text-center">
-                <p class="mb-0">© <?php echo date('Y'); ?> <a href="https://gravatar.com/lucasdorea" target="_blank">@HAKO</a>. Todos os direitos reservados.</p>
+                <p class="mb-0">© <?php echo date('Y'); ?> Luciana Araujo. Todos os direitos reservados.</p>
             </div>
         </div>
     </div>
